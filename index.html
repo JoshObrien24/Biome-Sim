@@ -159,6 +159,32 @@
             font-size: 12px;
             min-width: 40px;
         }
+        .import-label {
+            cursor: pointer;
+        }
+        .import-label button {
+            pointer-events: none;
+        }
+        .biome-preset {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            padding: 10px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        .biome-preset:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        #biome-presets {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +195,11 @@
                 <div id="controls">
                     <button id="playBtn">▶ PLAY</button>
                     <button id="resetBtn" class="reset">↻ RESET</button>
+                    <button id="exportBtn" class="reset">💾 EXPORT</button>
+                    <label for="importFile" class="import-label">
+                        <button class="reset">📁 IMPORT</button>
+                    </label>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
                     <div id="speed-control">
                         <span>⚡</span>
                         <input type="range" id="speedSlider" min="0.1" max="10" step="0.1" value="1">
@@ -200,6 +231,14 @@
         </div>
         <div id="data-panel">
             <div class="panel-section">
+                <h3>QUICK LOAD BIOMES</h3>
+                <div id="biome-presets">
+                    <button class="biome-preset" data-biome="arctic">Arctic Taiga</button>
+                    <button class="biome-preset" data-biome="rainforest">Tropical Rainforest</button>
+                    <button class="biome-preset" data-biome="savanna">African Savanna</button>
+                </div>
+            </div>
+            <div class="panel-section">
                 <h3>CURRENT POPULATIONS</h3>
                 <div id="populations"></div>
             </div>
@@ -221,10 +260,55 @@
             { type: "shrub", density: 0.5, color: "#4a7c59" }
           ],
           fauna: [
-            { species: "caribou", population: 50, growthRate: 0.05, color: "#8b7355", size: 8, speed: 2, diet: "herbivore" },
-            { species: "wolf", population: 8, growthRate: 0.02, color: "#505050", size: 6, speed: 3, diet: "carnivore", preyOn: ["caribou"] },
-            { species: "hare", population: 120, growthRate: 0.15, color: "#d4d4d4", size: 3, speed: 4, diet: "herbivore" },
-            { species: "fox", population: 15, growthRate: 0.08, color: "#c1440e", size: 5, speed: 3.5, diet: "carnivore", preyOn: ["hare"] }
+            { species: "caribou", population: 50, growthRate: 0.05, color: "#8b7355", size: 8, speed: 2, diet: "herbivore", animalType: "large_herbivore" },
+            { species: "wolf", population: 8, growthRate: 0.02, color: "#505050", size: 6, speed: 3, diet: "carnivore", preyOn: ["caribou"], animalType: "predator" },
+            { species: "hare", population: 120, growthRate: 0.15, color: "#d4d4d4", size: 3, speed: 4, diet: "herbivore", animalType: "small_herbivore" },
+            { species: "fox", population: 15, growthRate: 0.08, color: "#c1440e", size: 5, speed: 3.5, diet: "carnivore", preyOn: ["hare"], animalType: "predator" }
+          ]
+        };
+
+        const RAINFOREST_BIOME = {
+          name: "Tropical Rainforest",
+          geography: { latitude: 5, elevation: 100, terrainType: "jungle" },
+          climate: {
+            baseTemp: 26, tempRange: 8, seasonalVariation: 0.3,
+            precipitationRate: 0.7, windSpeed: 8, humidity: 0.85
+          },
+          flora: [
+            { type: "canopy", density: 0.6, color: "#2d5a2d" },
+            { type: "palm", density: 0.4, color: "#3d7a3d" },
+            { type: "undergrowth", density: 0.8, color: "#4d9a4d" }
+          ],
+          fauna: [
+            { species: "jaguar", population: 12, growthRate: 0.03, color: "#d4a017", size: 7, speed: 3.5, diet: "carnivore", preyOn: ["capybara", "tapir"], animalType: "predator" },
+            { species: "capybara", population: 80, growthRate: 0.1, color: "#8b6f47", size: 6, speed: 2.5, diet: "herbivore", animalType: "large_herbivore" },
+            { species: "macaw", population: 150, growthRate: 0.12, color: "#ff4500", size: 4, speed: 5, diet: "herbivore", animalType: "bird" },
+            { species: "tapir", population: 40, growthRate: 0.06, color: "#5c4033", size: 7, speed: 2, diet: "herbivore", animalType: "large_herbivore" },
+            { species: "anaconda", population: 20, growthRate: 0.04, color: "#556b2f", size: 5, speed: 2, diet: "carnivore", preyOn: ["capybara"], animalType: "predator" },
+            { species: "monkey", population: 100, growthRate: 0.1, color: "#8b4513", size: 4, speed: 3, diet: "omnivore", preyOn: ["macaw"], animalType: "small_omnivore" }
+          ]
+        };
+
+        const SAVANNA_BIOME = {
+          name: "African Savanna",
+          geography: { latitude: -10, elevation: 800, terrainType: "grassland" },
+          climate: {
+            baseTemp: 24, tempRange: 15, seasonalVariation: 0.6,
+            precipitationRate: 0.2, windSpeed: 12, humidity: 0.5
+          },
+          flora: [
+            { type: "acacia", density: 0.2, color: "#8b7355" },
+            { type: "grass", density: 0.9, color: "#9acd32" },
+            { type: "baobab", density: 0.05, color: "#a0826d" }
+          ],
+          fauna: [
+            { species: "lion", population: 10, growthRate: 0.025, color: "#daa520", size: 8, speed: 4, diet: "carnivore", preyOn: ["zebra", "wildebeest"], animalType: "predator" },
+            { species: "zebra", population: 100, growthRate: 0.08, color: "#000000", size: 7, speed: 4.5, diet: "herbivore", animalType: "large_herbivore" },
+            { species: "wildebeest", population: 150, growthRate: 0.09, color: "#696969", size: 7, speed: 4, diet: "herbivore", animalType: "large_herbivore" },
+            { species: "cheetah", population: 8, growthRate: 0.02, color: "#ffd700", size: 6, speed: 6, diet: "carnivore", preyOn: ["gazelle"], animalType: "predator" },
+            { species: "gazelle", population: 120, growthRate: 0.1, color: "#d2b48c", size: 5, speed: 5.5, diet: "herbivore", animalType: "small_herbivore" },
+            { species: "elephant", population: 30, growthRate: 0.03, color: "#808080", size: 12, speed: 2, diet: "herbivore", animalType: "large_herbivore" },
+            { species: "baboon", population: 60, growthRate: 0.09, color: "#a0522d", size: 5, speed: 3, diet: "omnivore", preyOn: ["gazelle"], animalType: "small_omnivore" }
           ]
         };
 
@@ -260,6 +344,7 @@
                             speed: species.speed,
                             diet: species.diet,
                             preyOn: species.preyOn || [],
+                            animalType: species.animalType || "default",
                             energy: 100,
                             age: Math.random() * 50
                         });
@@ -316,7 +401,7 @@
 
                 // Predation
                 this.animals.forEach(predator => {
-                    if (predator.diet === "carnivore" && predator.preyOn.length > 0) {
+                    if ((predator.diet === "carnivore" || predator.diet === "omnivore") && predator.preyOn.length > 0) {
                         this.animals.forEach(prey => {
                             if (predator.preyOn.includes(prey.species)) {
                                 const dx = predator.x - prey.x;
@@ -358,6 +443,7 @@
                             speed: species.speed,
                             diet: species.diet,
                             preyOn: species.preyOn || [],
+                            animalType: species.animalType || "default",
                             energy: 100,
                             age: 0
                         });
@@ -541,43 +627,65 @@
             ctx.drawImage(offscreenCanvas, 0, 0);
         }
 
-        // Pixel art animal drawing function
+        // Pixel art animal drawing function - uses animalType instead of species names
         function drawPixelAnimal(drawCtx, animal) {
             const x = Math.floor(animal.x);
             const y = Math.floor(animal.y);
             const size = animal.size;
+            const type = animal.animalType || "default";
             
-            // Draw pixel art style animal based on species
+            // Draw pixel art style animal based on animalType
             drawCtx.fillStyle = animal.color;
             
-            if (animal.species === 'caribou' || animal.species === 'wildebeest' || animal.species === 'zebra' || animal.species === 'elephant') {
-                // Large herbivore - blocky body
-                drawCtx.fillRect(x - size, y - size/2, size * 2, size);
-                drawCtx.fillRect(x - size/2, y - size * 1.5, size, size); // head
-                // legs
-                drawCtx.fillRect(x - size, y + size/2, size/3, size/2);
-                drawCtx.fillRect(x + size/2, y + size/2, size/3, size/2);
-            } else if (animal.species === 'wolf' || animal.species === 'fox' || animal.species === 'lion' || animal.species === 'jaguar' || animal.species === 'cheetah' || animal.species === 'anaconda') {
-                // Predator - sleeker
-                drawCtx.fillRect(x - size, y - size/3, size * 1.5, size * 0.6);
-                drawCtx.fillRect(x + size/2, y - size/2, size/2, size/2); // head
-                // tail
-                drawCtx.fillRect(x - size * 1.5, y, size/2, size/3);
-            } else if (animal.species === 'hare' || animal.species === 'gazelle') {
-                // Small herbivore - compact
-                drawCtx.fillRect(x - size/2, y - size/2, size, size);
-                drawCtx.fillRect(x - size/3, y - size, size/3, size/2); // ear
-            } else if (animal.species === 'macaw') {
-                // Bird - triangular
-                drawCtx.beginPath();
-                drawCtx.moveTo(x, y - size);
-                drawCtx.lineTo(x - size, y + size/2);
-                drawCtx.lineTo(x + size, y + size/2);
-                drawCtx.closePath();
-                drawCtx.fill();
-            } else {
-                // Default - simple square
-                drawCtx.fillRect(x - size/2, y - size/2, size, size);
+            switch(type) {
+                case "large_herbivore":
+                    // Large herbivore - blocky body (caribou, elephant, wildebeest, zebra)
+                    drawCtx.fillRect(x - size, y - size/2, size * 2, size);
+                    drawCtx.fillRect(x - size/2, y - size * 1.5, size, size); // head
+                    // legs
+                    drawCtx.fillRect(x - size, y + size/2, size/3, size/2);
+                    drawCtx.fillRect(x + size/2, y + size/2, size/3, size/2);
+                    break;
+                    
+                case "small_herbivore":
+                    // Small herbivore - compact (hare, gazelle)
+                    drawCtx.fillRect(x - size/2, y - size/2, size, size);
+                    drawCtx.fillRect(x - size/3, y - size, size/3, size/2); // ear
+                    break;
+                    
+                case "predator":
+                    // Predator - sleeker (wolf, fox, lion, jaguar, cheetah, anaconda)
+                    drawCtx.fillRect(x - size, y - size/3, size * 1.5, size * 0.6);
+                    drawCtx.fillRect(x + size/2, y - size/2, size/2, size/2); // head
+                    // tail
+                    drawCtx.fillRect(x - size * 1.5, y, size/2, size/3);
+                    break;
+                    
+                case "bird":
+                    // Bird - triangular (macaw)
+                    drawCtx.beginPath();
+                    drawCtx.moveTo(x, y - size);
+                    drawCtx.lineTo(x - size, y + size/2);
+                    drawCtx.lineTo(x + size, y + size/2);
+                    drawCtx.closePath();
+                    drawCtx.fill();
+                    break;
+                    
+                case "small_omnivore":
+                    // Small omnivore - rounded compact (monkey, baboon)
+                    drawCtx.fillRect(x - size/2, y - size/2, size, size * 1.2);
+                    drawCtx.fillRect(x - size/3, y - size, size * 0.6, size * 0.5); // head
+                    // arms
+                    drawCtx.fillRect(x - size, y, size/3, size/2);
+                    drawCtx.fillRect(x + size * 0.6, y, size/3, size/2);
+                    // tail
+                    drawCtx.fillRect(x + size/4, y + size, size/4, size);
+                    break;
+                    
+                default:
+                    // Default - simple square
+                    drawCtx.fillRect(x - size/2, y - size/2, size, size);
+                    break;
             }
             
             // Add eye dot
@@ -585,15 +693,20 @@
             const eyeX = x + (animal.vx > 0 ? size/3 : -size/3);
             drawCtx.fillRect(eyeX, y - size/3, 2, 2);
             
-            // Direction indicator (simplified)
+            // Direction indicator (different colors for different diets)
             if (animal.diet === 'carnivore') {
                 drawCtx.strokeStyle = 'rgba(255,0,0,0.4)';
-                drawCtx.lineWidth = 2;
-                drawCtx.beginPath();
-                drawCtx.moveTo(x, y);
-                drawCtx.lineTo(x + animal.vx * 2, y + animal.vy * 2);
-                drawCtx.stroke();
+            } else if (animal.diet === 'omnivore') {
+                drawCtx.strokeStyle = 'rgba(255,165,0,0.4)';
+            } else {
+                return; // No indicator for herbivores
             }
+            
+            drawCtx.lineWidth = 2;
+            drawCtx.beginPath();
+            drawCtx.moveTo(x, y);
+            drawCtx.lineTo(x + animal.vx * 2, y + animal.vy * 2);
+            drawCtx.stroke();
         }
 
         function updateUI() {
@@ -662,6 +775,88 @@
         document.getElementById('speedSlider').addEventListener('input', (e) => {
             speed = parseFloat(e.target.value);
             document.getElementById('speedLabel').textContent = speed.toFixed(1) + 'x';
+        });
+
+        // Export biome configuration
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const dataStr = JSON.stringify(simulation.config, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${simulation.config.name.replace(/\s+/g, '_')}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+
+        // Import biome configuration
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const config = JSON.parse(event.target.result);
+                        simulation = new BiomeSimulation(config);
+                        isPlaying = false;
+                        document.getElementById('playBtn').textContent = '▶ PLAY';
+                        document.getElementById('playBtn').className = '';
+                        document.getElementById('biome-name').textContent = config.name;
+                        
+                        // Reset color interpolation for new biome
+                        const initialColor = getTargetBackgroundColor(simulation.season, simulation.weather);
+                        currentBgColor = initialColor;
+                        targetBgColor = initialColor;
+                        
+                        render();
+                        updateUI();
+                        alert(`Loaded biome: ${config.name}`);
+                    } catch (error) {
+                        alert('Error loading biome configuration: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+            // Reset file input
+            e.target.value = '';
+        });
+
+        // Quick load preset biomes
+        document.querySelectorAll('.biome-preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const biomeType = btn.getAttribute('data-biome');
+                let config;
+                
+                switch(biomeType) {
+                    case 'arctic':
+                        config = DEFAULT_BIOME;
+                        break;
+                    case 'rainforest':
+                        config = RAINFOREST_BIOME;
+                        break;
+                    case 'savanna':
+                        config = SAVANNA_BIOME;
+                        break;
+                    default:
+                        return;
+                }
+                
+                simulation = new BiomeSimulation(config);
+                isPlaying = false;
+                document.getElementById('playBtn').textContent = '▶ PLAY';
+                document.getElementById('playBtn').className = '';
+                document.getElementById('biome-name').textContent = config.name;
+                
+                // Reset color interpolation for new biome
+                const initialColor = getTargetBackgroundColor(simulation.season, simulation.weather);
+                currentBgColor = initialColor;
+                targetBgColor = initialColor;
+                
+                render();
+                updateUI();
+            });
         });
 
         // Initial render
