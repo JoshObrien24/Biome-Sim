@@ -1,217 +1,207 @@
-# Biome Climate Simulator
+# Biome Climate Simulator - Updated
 
-A real-time ecosystem simulation that visualizes climate, weather patterns, flora, and fauna interactions in various biomes. Configure different environments through JSON files and watch as complex ecological systems evolve over time.
+A real-time pixel art ecosystem simulation with smooth transitions and flexible animal types.
 
-## Features
+## Animal Type System
 
-### Visual Simulation
-- **2D Isometric View**: Stardew Valley-style perspective showing your biome
-- **Real-time Weather**: See snow, rain, clouds, and clear skies
-- **Seasonal Changes**: Visual transitions through winter, spring, summer, and autumn
-- **Animal Behavior**: Watch animals move, hunt, flee, and reproduce
-- **Flora Visualization**: Trees, shrubs, and vegetation that change with seasons
+Animals are now defined by **animalType** instead of hardcoded species names. This makes it easy to create any custom animal!
 
-### Climate Simulation
-- **Temperature**: Dynamic temperature based on season, latitude, and daily variation
-- **Weather Patterns**: Rain, snow, cloudy, and clear conditions
-- **Wind Speed**: Variable wind patterns
-- **Humidity**: Atmospheric moisture levels
-- **Precipitation**: Rainfall and snowfall amounts
+### Available Animal Types
 
-### Ecosystem Dynamics
-- **Predator-Prey Relationships**: Carnivores hunt herbivores
-- **Population Dynamics**: Natural growth, death, and reproduction
-- **Energy Systems**: Animals require energy and can starve
-- **Age Simulation**: Animals age over time
-- **Species Interactions**: Complex food web relationships
+#### `large_herbivore`
+- **Shape**: Blocky body with rectangular head and legs
+- **Examples**: Caribou, elephant, wildebeest, zebra, bison
+- **Best for**: Large grazing animals
 
-### Controls
-- **Play/Pause**: Control simulation flow
-- **Speed Control**: 0.1x to 10x speed (default: 1 hour per second)
-- **Reset**: Restart simulation with current configuration
-- **Save/Load**: Store custom biome configurations
-- **Import/Export**: Share biome JSON files
-- **Real-time Parameter Tweaking**: Adjust climate and populations on the fly
+#### `small_herbivore`
+- **Shape**: Compact square body with ear
+- **Examples**: Hare, rabbit, gazelle, deer
+- **Best for**: Small, fast prey animals
 
-### Data Visualization
-- **Population Trends**: Line charts tracking species over time
-- **Current Stats**: Live population counts with progress bars
-- **Climate Metrics**: Real-time temperature, weather, wind, and humidity displays
+#### `predator`
+- **Shape**: Sleek elongated body with head and tail
+- **Examples**: Wolf, fox, lion, jaguar, cheetah
+- **Best for**: Carnivorous hunters
+- **Visual**: Red direction indicator when hunting
 
-## JSON Configuration Format
+#### `bird`
+- **Shape**: Triangle (wings spread)
+- **Examples**: Macaw, eagle, raven, parrot
+- **Best for**: Flying animals
 
-Biomes are defined using JSON files with the following structure:
+#### `small_omnivore`
+- **Shape**: Rounded body with arms and tail
+- **Examples**: Monkey, baboon, raccoon, bear
+- **Best for**: Versatile animals that hunt and forage
+- **Visual**: Orange direction indicator when hunting
+
+#### `default`
+- **Shape**: Simple square
+- **Best for**: Any custom creature
+
+## Diet Types
+
+### `herbivore`
+- Eats plants only
+- Does not hunt other animals
+- No direction indicator
+- Natural prey for carnivores and omnivores
+
+### `carnivore`
+- Hunts other animals (specified in `preyOn` array)
+- Red direction indicator shows hunting behavior
+- Gains energy from successful kills
+
+### `omnivore` (NEW!)
+- Can hunt other animals (specified in `preyOn` array)
+- Orange direction indicator shows hunting behavior
+- More versatile than pure carnivores
+- Good for creating realistic ecosystems with scavengers
+
+## JSON Structure
 
 ```json
 {
-  "name": "Biome Name",
+  "name": "My Custom Biome",
   "geography": {
-    "latitude": 65,          // Affects seasonal temperature variation
-    "elevation": 200,        // Meters above sea level
-    "terrainType": "forest"  // Visual descriptor
+    "latitude": 45,
+    "elevation": 500,
+    "terrainType": "forest"
   },
   "climate": {
-    "baseTemp": -15,         // Base temperature in Celsius
-    "tempRange": 35,         // Temperature swing from base
-    "seasonalVariation": 0.8, // 0-1, how much seasons affect temp
-    "precipitationRate": 0.3, // 0-1, chance of precipitation
-    "windSpeed": 15,         // Base wind speed in km/h
-    "humidity": 0.65         // 0-1, atmospheric moisture
+    "baseTemp": 10,
+    "tempRange": 20,
+    "seasonalVariation": 0.7,
+    "precipitationRate": 0.4,
+    "windSpeed": 12,
+    "humidity": 0.6
   },
   "flora": [
     {
-      "type": "spruce",      // Plant type name
-      "density": 0.4,        // 0-1, how many appear
-      "color": "#2d5016"     // Hex color code
+      "type": "oak",
+      "density": 0.5,
+      "color": "#2d5016"
     }
   ],
   "fauna": [
     {
-      "species": "wolf",
-      "population": 8,        // Starting population
-      "growthRate": 0.02,     // Natural reproduction rate
-      "color": "#505050",     // Hex color code
-      "size": 6,              // Visual size (pixels)
-      "speed": 3,             // Movement speed
-      "diet": "carnivore",    // "herbivore" or "carnivore"
-      "preyOn": ["caribou"]   // Species this hunts (carnivores only)
+      "species": "bear",
+      "population": 20,
+      "growthRate": 0.04,
+      "color": "#654321",
+      "size": 10,
+      "speed": 2.5,
+      "diet": "omnivore",
+      "preyOn": ["deer", "rabbit"],
+      "animalType": "small_omnivore"
     }
   ]
 }
 ```
 
-## Included Example Biomes
+## Fauna Properties Explained
 
-### 1. Arctic Taiga (`arctic_taiga.json`)
-- **Climate**: Cold winters (-30°C) to mild summers (20°C)
-- **Animals**: Caribou, wolves, hares, foxes
-- **Flora**: Spruce, pine, shrubs
-- **Characteristics**: Harsh winters, seasonal migration patterns
+- **species**: Display name (can be anything)
+- **population**: Target population size
+- **growthRate**: 0.01-0.15 (how fast they reproduce)
+- **color**: Hex color code for the animal
+- **size**: Pixel size (3-15 recommended)
+- **speed**: Movement speed (1-6 recommended)
+- **diet**: `herbivore`, `carnivore`, or `omnivore`
+- **preyOn**: Array of species names this animal hunts (only for carnivore/omnivore)
+- **animalType**: Visual appearance (see types above)
 
-### 2. Tropical Rainforest (`tropical_rainforest.json`)
-- **Climate**: Hot and humid year-round (22-30°C)
-- **Animals**: Jaguars, capybaras, macaws, tapirs, anacondas
-- **Flora**: Dense canopy, palms, undergrowth
-- **Characteristics**: High biodiversity, constant precipitation
+## Creating Custom Animals
 
-### 3. African Savanna (`african_savanna.json`)
-- **Climate**: Warm with seasonal wet/dry periods (15-35°C)
-- **Animals**: Lions, zebras, wildebeest, cheetahs, gazelles, elephants
-- **Flora**: Acacia trees, grasslands, baobabs
-- **Characteristics**: Large herbivore herds, apex predators
+### Example: Adding a Bear
+```json
+{
+  "species": "grizzly",
+  "population": 15,
+  "growthRate": 0.03,
+  "color": "#8B4513",
+  "size": 11,
+  "speed": 2,
+  "diet": "omnivore",
+  "preyOn": ["deer", "fish"],
+  "animalType": "small_omnivore"
+}
+```
 
-## Creating Custom Biomes
+### Example: Adding a Dragon (Fantasy)
+```json
+{
+  "species": "dragon",
+  "population": 3,
+  "growthRate": 0.01,
+  "color": "#8B0000",
+  "size": 15,
+  "speed": 4,
+  "diet": "carnivore",
+  "preyOn": ["knight", "sheep"],
+  "animalType": "predator"
+}
+```
 
-### Step 1: Design Your Ecosystem
-Think about:
-- What climate zone? (Arctic, temperate, tropical, desert, etc.)
-- What animals live there? What do they eat?
-- What plants grow there?
-- How do seasons affect the environment?
+### Example: Adding a Penguin
+```json
+{
+  "species": "penguin",
+  "population": 100,
+  "growthRate": 0.08,
+  "color": "#000000",
+  "size": 5,
+  "speed": 2,
+  "diet": "carnivore",
+  "preyOn": ["fish"],
+  "animalType": "bird"
+}
+```
 
-### Step 2: Set Climate Parameters
-- `baseTemp`: Average yearly temperature
-- `tempRange`: How much temperature varies seasonally
-- `seasonalVariation`: 0.8-1.0 for strong seasons, 0.1-0.3 for tropics
-- `precipitationRate`: 0.1 for deserts, 0.3-0.5 for temperate, 0.7+ for rainforests
+## Features
 
-### Step 3: Add Flora
-- Use 2-5 plant types for variety
-- Adjust `density` (0.1-0.9) for sparse to dense coverage
-- Choose appropriate colors for the biome
+✅ **Smooth color transitions** - No more flashing backgrounds
+✅ **Pixel art style** - Crisp retro aesthetic
+✅ **Double buffered rendering** - Eliminates screen tearing
+✅ **Flexible animal system** - Create any creature with animalType
+✅ **Omnivores** - Animals that can hunt AND forage
+✅ **Import/Export** - Save and share your biomes
+✅ **Quick load presets** - Arctic, Rainforest, Savanna built-in
+✅ **Real-time stats** - Population tracking and weather data
+✅ **Speed control** - 0.1x to 10x simulation speed
 
-### Step 4: Design Food Web
-- Start with herbivores (higher populations)
-- Add predators with `preyOn` relationships
-- Balance populations: predators need enough prey
-- Adjust `growthRate` for population stability
+## Tips for Balanced Ecosystems
 
-### Step 5: Test and Iterate
-- Import your JSON
-- Run simulation at 5-10x speed
-- Watch for population crashes or explosions
-- Adjust parameters and test again
+1. **Predator to Prey Ratio**: Keep predators at 5-15% of prey population
+2. **Growth Rates**: 
+   - Herbivores: 0.08-0.15
+   - Omnivores: 0.04-0.08
+   - Carnivores: 0.02-0.05
+3. **Speed Balance**: Prey should be faster than predators, or much more numerous
+4. **Food Web**: Create multiple prey options for predators to prevent collapse
+5. **Omnivores**: Use omnivores to add stability to ecosystems
 
-## Tips for Realistic Ecosystems
+## Example: Temperate Forest
 
-### Population Balance
-- Prey should outnumber predators 5:1 to 15:1
-- Herbivore growth rates: 0.08-0.15
-- Carnivore growth rates: 0.02-0.05
+```json
+{
+  "name": "Temperate Forest",
+  "climate": {
+    "baseTemp": 12,
+    "tempRange": 25,
+    "seasonalVariation": 0.7,
+    "precipitationRate": 0.5,
+    "windSpeed": 10,
+    "humidity": 0.7
+  },
+  "fauna": [
+    { "species": "deer", "population": 80, "diet": "herbivore", "animalType": "large_herbivore", "color": "#8B4513", "size": 7, "speed": 3, "growthRate": 0.09 },
+    { "species": "rabbit", "population": 150, "diet": "herbivore", "animalType": "small_herbivore", "color": "#D2B48C", "size": 4, "speed": 4, "growthRate": 0.12 },
+    { "species": "wolf", "population": 12, "diet": "carnivore", "preyOn": ["deer"], "animalType": "predator", "color": "#696969", "size": 7, "speed": 3.5, "growthRate": 0.03 },
+    { "species": "fox", "population": 20, "diet": "carnivore", "preyOn": ["rabbit"], "animalType": "predator", "color": "#FF4500", "size": 5, "speed": 3, "growthRate": 0.05 },
+    { "species": "bear", "population": 8, "diet": "omnivore", "preyOn": ["deer", "rabbit"], "animalType": "small_omnivore", "color": "#654321", "size": 10, "speed": 2, "growthRate": 0.025 }
+  ]
+}
+```
 
-### Climate Realism
-- Arctic: baseTemp -15 to -5, tempRange 30-40
-- Temperate: baseTemp 10-15, tempRange 20-30
-- Tropical: baseTemp 24-28, tempRange 5-10
-- Desert: baseTemp 20-25, tempRange 30-40, precipitationRate 0.05-0.15
-
-### Speed Settings
-- Fast species (birds, small prey): 4-6
-- Medium species (most mammals): 2-4
-- Slow species (large herbivores): 1-2.5
-
-## Usage Instructions
-
-### Basic Operation
-1. Open the application in your browser
-2. Click **PLAY** to start the simulation
-3. Use the speed slider to control time flow
-4. Watch populations, weather, and seasons change
-
-### Saving Configurations
-1. Adjust parameters or create a custom biome
-2. Click **SAVE** button
-3. Enter a name for your configuration
-4. Access it later from the "SAVED SLOTS" list
-
-### Importing Custom Biomes
-1. Create a JSON file following the format above
-2. Click **IMPORT** button
-3. Select your JSON file
-4. Simulation resets with new biome
-
-### Exporting Biomes
-1. Click **EXPORT** button
-2. JSON file downloads automatically
-3. Share with others or save as backup
-
-## Technical Details
-
-### Simulation Engine
-- Time progression: Configurable hours per frame
-- Physics: Simple velocity-based movement
-- Predation: Distance-based detection and energy transfer
-- Reproduction: Probabilistic based on growth rates
-- Mortality: Age and energy-based
-
-### Performance
-- Optimized for 200-300 simultaneous animals
-- Canvas rendering at 60 FPS
-- Efficient collision detection
-- History limited to last 100 data points
-
-### Browser Compatibility
-- Chrome/Edge: Full support
-- Firefox: Full support
-- Safari: Full support
-- Requires modern browser with Canvas API
-
-## Future Enhancement Ideas
-
-- Time of day cycle (sunrise/sunset)
-- Migration patterns
-- Plant growth and seasonal changes
-- Water sources and terrain features
-- More complex predator strategies
-- Disease and population events
-- Climate change scenarios
-- Multi-layer food webs
-- Symbiotic relationships
-
-## License
-
-Feel free to modify and extend this simulator for your own projects!
-
-## Credits
-
-Created as a customizable ecosystem simulation platform. Designed to be educational, extensible, and visually engaging.
+Enjoy creating your custom ecosystems! 🌲🦌🐺
