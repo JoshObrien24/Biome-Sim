@@ -1,0 +1,120 @@
+{
+  "name": "Temperate Forest",
+  "geography": {
+    "latitude": 45,
+    "elevation": 400,
+    "terrainType": "forest"
+  },
+  "climate": {
+    "baseTemp": 12,
+    "tempRange": 25,
+    "seasonalVariation": 0.75,
+    "precipitationRate": 0.5,
+    "windSpeed": 10,
+    "humidity": 0.7
+  },
+  "flora": [
+    {
+      "type": "oak",
+      "density": 0.5,
+      "color": "#2d5016"
+    },
+    {
+      "type": "maple",
+      "density": 0.4,
+      "color": "#3a6b35"
+    },
+    {
+      "type": "undergrowth",
+      "density": 0.7,
+      "color": "#4a7c59"
+    }
+  ],
+  "fauna": [
+    {
+      "species": "deer",
+      "population": 80,
+      "growthRate": 0.09,
+      "color": "#8b4513",
+      "size": 8,
+      "speed": 4,
+      "diet": "herbivore",
+      "animalType": "large_herbivore"
+    },
+    {
+      "species": "wolf",
+      "population": 12,
+      "growthRate": 0.03,
+      "color": "#696969",
+      "size": 7,
+      "speed": 3.5,
+      "diet": "carnivore",
+      "preyOn": ["deer", "rabbit"],
+      "animalType": "predator"
+    },
+    {
+      "species": "rabbit",
+      "population": 150,
+      "growthRate": 0.14,
+      "color": "#d2b48c",
+      "size": 4,
+      "speed": 4.5,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "fox",
+      "population": 20,
+      "growthRate": 0.06,
+      "color": "#ff4500",
+      "size": 5,
+      "speed": 4,
+      "diet": "carnivore",
+      "preyOn": ["rabbit", "squirrel"],
+      "animalType": "predator"
+    },
+    {
+      "species": "bear",
+      "population": 10,
+      "growthRate": 0.03,
+      "color": "#654321",
+      "size": 11,
+      "speed": 2.5,
+      "diet": "omnivore",
+      "preyOn": ["deer", "rabbit"],
+      "animalType": "small_omnivore"
+    },
+    {
+      "species": "squirrel",
+      "population": 180,
+      "growthRate": 0.12,
+      "color": "#a0522d",
+      "size": 3,
+      "speed": 3.5,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "raccoon",
+      "population": 50,
+      "growthRate": 0.08,
+      "color": "#808080",
+      "size": 5,
+      "speed": 2.5,
+      "diet": "omnivore",
+      "preyOn": ["squirrel"],
+      "animalType": "small_omnivore"
+    },
+    {
+      "species": "owl",
+      "population": 15,
+      "growthRate": 0.05,
+      "color": "#d2691e",
+      "size": 5,
+      "speed": 5,
+      "diet": "carnivore",
+      "preyOn": ["squirrel", "rabbit"],
+      "animalType": "bird"
+    }
+  ]
+}

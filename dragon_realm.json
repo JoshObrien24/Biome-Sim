@@ -1,0 +1,131 @@
+{
+  "name": "Dragon Realm",
+  "geography": {
+    "latitude": 40,
+    "elevation": 1500,
+    "terrainType": "mountains"
+  },
+  "climate": {
+    "baseTemp": 18,
+    "tempRange": 20,
+    "seasonalVariation": 0.6,
+    "precipitationRate": 0.4,
+    "windSpeed": 20,
+    "humidity": 0.55
+  },
+  "flora": [
+    {
+      "type": "ancient_tree",
+      "density": 0.3,
+      "color": "#4b0082"
+    },
+    {
+      "type": "crystal_grass",
+      "density": 0.5,
+      "color": "#9370db"
+    },
+    {
+      "type": "fire_flower",
+      "density": 0.2,
+      "color": "#ff4500"
+    }
+  ],
+  "fauna": [
+    {
+      "species": "dragon",
+      "population": 5,
+      "growthRate": 0.01,
+      "color": "#8b0000",
+      "size": 15,
+      "speed": 3,
+      "diet": "carnivore",
+      "preyOn": ["knight", "unicorn", "griffin"],
+      "animalType": "predator"
+    },
+    {
+      "species": "knight",
+      "population": 30,
+      "growthRate": 0.04,
+      "color": "#c0c0c0",
+      "size": 6,
+      "speed": 2,
+      "diet": "omnivore",
+      "preyOn": ["boar", "deer"],
+      "animalType": "default"
+    },
+    {
+      "species": "unicorn",
+      "population": 40,
+      "growthRate": 0.06,
+      "color": "#f0f8ff",
+      "size": 8,
+      "speed": 4.5,
+      "diet": "herbivore",
+      "animalType": "large_herbivore"
+    },
+    {
+      "species": "griffin",
+      "population": 15,
+      "growthRate": 0.04,
+      "color": "#daa520",
+      "size": 9,
+      "speed": 5,
+      "diet": "carnivore",
+      "preyOn": ["deer", "boar"],
+      "animalType": "bird"
+    },
+    {
+      "species": "dire_wolf",
+      "population": 25,
+      "growthRate": 0.05,
+      "color": "#2f4f4f",
+      "size": 8,
+      "speed": 4,
+      "diet": "carnivore",
+      "preyOn": ["deer", "boar"],
+      "animalType": "predator"
+    },
+    {
+      "species": "deer",
+      "population": 100,
+      "growthRate": 0.1,
+      "color": "#d2691e",
+      "size": 7,
+      "speed": 4,
+      "diet": "herbivore",
+      "animalType": "large_herbivore"
+    },
+    {
+      "species": "boar",
+      "population": 80,
+      "growthRate": 0.08,
+      "color": "#654321",
+      "size": 6,
+      "speed": 3,
+      "diet": "omnivore",
+      "preyOn": ["rabbit"],
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "phoenix",
+      "population": 3,
+      "growthRate": 0.02,
+      "color": "#ff6347",
+      "size": 7,
+      "speed": 6,
+      "diet": "omnivore",
+      "preyOn": ["rabbit"],
+      "animalType": "bird"
+    },
+    {
+      "species": "rabbit",
+      "population": 200,
+      "growthRate": 0.15,
+      "color": "#d3d3d3",
+      "size": 4,
+      "speed": 4.5,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    }
+  ]
+}

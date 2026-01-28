@@ -1,0 +1,108 @@
+{
+  "name": "Australian Outback",
+  "geography": {
+    "latitude": -25,
+    "elevation": 300,
+    "terrainType": "desert"
+  },
+  "climate": {
+    "baseTemp": 28,
+    "tempRange": 25,
+    "seasonalVariation": 0.5,
+    "precipitationRate": 0.1,
+    "windSpeed": 18,
+    "humidity": 0.3
+  },
+  "flora": [
+    {
+      "type": "eucalyptus",
+      "density": 0.15,
+      "color": "#8b7d6b"
+    },
+    {
+      "type": "spinifex",
+      "density": 0.7,
+      "color": "#d2b48c"
+    },
+    {
+      "type": "acacia",
+      "density": 0.2,
+      "color": "#a0826d"
+    }
+  ],
+  "fauna": [
+    {
+      "species": "kangaroo",
+      "population": 100,
+      "growthRate": 0.09,
+      "color": "#cd853f",
+      "size": 9,
+      "speed": 5,
+      "diet": "herbivore",
+      "animalType": "large_herbivore"
+    },
+    {
+      "species": "dingo",
+      "population": 15,
+      "growthRate": 0.04,
+      "color": "#d2691e",
+      "size": 6,
+      "speed": 4,
+      "diet": "carnivore",
+      "preyOn": ["wallaby", "rabbit"],
+      "animalType": "predator"
+    },
+    {
+      "species": "wallaby",
+      "population": 80,
+      "growthRate": 0.1,
+      "color": "#bc8f8f",
+      "size": 6,
+      "speed": 4.5,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "emu",
+      "population": 50,
+      "growthRate": 0.07,
+      "color": "#696969",
+      "size": 8,
+      "speed": 4.5,
+      "diet": "omnivore",
+      "preyOn": ["lizard"],
+      "animalType": "bird"
+    },
+    {
+      "species": "wombat",
+      "population": 40,
+      "growthRate": 0.06,
+      "color": "#8b7355",
+      "size": 6,
+      "speed": 2,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "wedge_tailed_eagle",
+      "population": 8,
+      "growthRate": 0.03,
+      "color": "#654321",
+      "size": 6,
+      "speed": 6,
+      "diet": "carnivore",
+      "preyOn": ["wallaby", "wombat", "rabbit"],
+      "animalType": "bird"
+    },
+    {
+      "species": "rabbit",
+      "population": 150,
+      "growthRate": 0.15,
+      "color": "#dcdcdc",
+      "size": 4,
+      "speed": 4,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    }
+  ]
+}

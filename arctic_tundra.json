@@ -1,0 +1,99 @@
+{
+  "name": "Arctic Tundra",
+  "geography": {
+    "latitude": 75,
+    "elevation": 50,
+    "terrainType": "tundra"
+  },
+  "climate": {
+    "baseTemp": -25,
+    "tempRange": 40,
+    "seasonalVariation": 0.9,
+    "precipitationRate": 0.15,
+    "windSpeed": 25,
+    "humidity": 0.5
+  },
+  "flora": [
+    {
+      "type": "shrub",
+      "density": 0.3,
+      "color": "#556b2f"
+    },
+    {
+      "type": "moss",
+      "density": 0.6,
+      "color": "#6b8e23"
+    },
+    {
+      "type": "grass",
+      "density": 0.4,
+      "color": "#8fbc8f"
+    }
+  ],
+  "fauna": [
+    {
+      "species": "polar_bear",
+      "population": 6,
+      "growthRate": 0.02,
+      "color": "#f0f8ff",
+      "size": 12,
+      "speed": 2.5,
+      "diet": "carnivore",
+      "preyOn": ["seal", "arctic_fox"],
+      "animalType": "predator"
+    },
+    {
+      "species": "seal",
+      "population": 40,
+      "growthRate": 0.06,
+      "color": "#696969",
+      "size": 7,
+      "speed": 3,
+      "diet": "carnivore",
+      "preyOn": ["fish"],
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "arctic_fox",
+      "population": 25,
+      "growthRate": 0.07,
+      "color": "#e6e6fa",
+      "size": 5,
+      "speed": 3.5,
+      "diet": "omnivore",
+      "preyOn": ["lemming", "bird"],
+      "animalType": "predator"
+    },
+    {
+      "species": "lemming",
+      "population": 200,
+      "growthRate": 0.18,
+      "color": "#deb887",
+      "size": 3,
+      "speed": 3,
+      "diet": "herbivore",
+      "animalType": "small_herbivore"
+    },
+    {
+      "species": "snowy_owl",
+      "population": 15,
+      "growthRate": 0.05,
+      "color": "#fffafa",
+      "size": 5,
+      "speed": 5,
+      "diet": "carnivore",
+      "preyOn": ["lemming"],
+      "animalType": "bird"
+    },
+    {
+      "species": "musk_ox",
+      "population": 30,
+      "growthRate": 0.04,
+      "color": "#654321",
+      "size": 10,
+      "speed": 2,
+      "diet": "herbivore",
+      "animalType": "large_herbivore"
+    }
+  ]
+}
