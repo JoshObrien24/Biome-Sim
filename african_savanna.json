@@ -1,0 +1,91 @@
+{
+  "name": "African Savanna",
+  "geography": {
+    "latitude": -10,
+    "elevation": 800,
+    "terrainType": "grassland"
+  },
+  "climate": {
+    "baseTemp": 24,
+    "tempRange": 15,
+    "seasonalVariation": 0.6,
+    "precipitationRate": 0.2,
+    "windSpeed": 12,
+    "humidity": 0.5
+  },
+  "flora": [
+    {
+      "type": "acacia",
+      "density": 0.2,
+      "color": "#8b7355"
+    },
+    {
+      "type": "grass",
+      "density": 0.9,
+      "color": "#9acd32"
+    },
+    {
+      "type": "baobab",
+      "density": 0.05,
+      "color": "#a0826d"
+    }
+  ],
+  "fauna": [
+    {
+      "species": "lion",
+      "population": 10,
+      "growthRate": 0.025,
+      "color": "#daa520",
+      "size": 8,
+      "speed": 4,
+      "diet": "carnivore",
+      "preyOn": ["zebra", "wildebeest"]
+    },
+    {
+      "species": "zebra",
+      "population": 100,
+      "growthRate": 0.08,
+      "color": "#000000",
+      "size": 7,
+      "speed": 4.5,
+      "diet": "herbivore"
+    },
+    {
+      "species": "wildebeest",
+      "population": 150,
+      "growthRate": 0.09,
+      "color": "#696969",
+      "size": 7,
+      "speed": 4,
+      "diet": "herbivore"
+    },
+    {
+      "species": "cheetah",
+      "population": 8,
+      "growthRate": 0.02,
+      "color": "#ffd700",
+      "size": 6,
+      "speed": 6,
+      "diet": "carnivore",
+      "preyOn": ["gazelle"]
+    },
+    {
+      "species": "gazelle",
+      "population": 120,
+      "growthRate": 0.1,
+      "color": "#d2b48c",
+      "size": 5,
+      "speed": 5.5,
+      "diet": "herbivore"
+    },
+    {
+      "species": "elephant",
+      "population": 30,
+      "growthRate": 0.03,
+      "color": "#808080",
+      "size": 12,
+      "speed": 2,
+      "diet": "herbivore"
+    }
+  ]
+}
