@@ -554,6 +554,11 @@
         }
 
         function drawTerrain(drawCtx, flora, season) {
+            // Draw ground layer first (changes with season)
+            const groundColor = getGroundColor(season);
+            drawCtx.fillStyle = groundColor;
+            drawCtx.fillRect(0, 350, 800, 100); // Ground layer at bottom
+            
             flora.forEach(plant => {
                 const count = Math.floor(plant.density * 50);
                 for (let i = 0; i < count; i++) {
@@ -588,6 +593,16 @@
                     }
                 }
             });
+        }
+
+        function getGroundColor(season) {
+            switch(season) {
+                case "winter": return "#e8f4f8"; // Snowy white
+                case "spring": return "#90ee90"; // Light green
+                case "summer": return "#8fbc8f"; // Green
+                case "autumn": return "#daa520"; // Golden brown
+                default: return "#8fbc8f";
+            }
         }
 
         function render() {
