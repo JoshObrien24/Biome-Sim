@@ -49,7 +49,10 @@
       "size": 7,
       "speed": 3.5,
       "diet": "carnivore",
-      "preyOn": ["deer", "rabbit"],
+      "preyOn": [
+        "deer",
+        "rabbit"
+      ],
       "animalType": "predator"
     },
     {
@@ -70,7 +73,10 @@
       "size": 5,
       "speed": 4,
       "diet": "carnivore",
-      "preyOn": ["rabbit", "squirrel"],
+      "preyOn": [
+        "rabbit",
+        "squirrel"
+      ],
       "animalType": "predator"
     },
     {
@@ -81,7 +87,10 @@
       "size": 11,
       "speed": 2.5,
       "diet": "omnivore",
-      "preyOn": ["deer", "rabbit"],
+      "preyOn": [
+        "deer",
+        "rabbit"
+      ],
       "animalType": "small_omnivore"
     },
     {
@@ -102,7 +111,9 @@
       "size": 5,
       "speed": 2.5,
       "diet": "omnivore",
-      "preyOn": ["squirrel"],
+      "preyOn": [
+        "squirrel"
+      ],
       "animalType": "small_omnivore"
     },
     {
@@ -113,8 +124,12 @@
       "size": 5,
       "speed": 5,
       "diet": "carnivore",
-      "preyOn": ["squirrel", "rabbit"],
+      "preyOn": [
+        "squirrel",
+        "rabbit"
+      ],
       "animalType": "bird"
     }
-  ]
+  ],
+  "groundColor": "#654321"
 }

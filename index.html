@@ -254,6 +254,7 @@
             baseTemp: -15, tempRange: 35, seasonalVariation: 0.8,
             precipitationRate: 0.3, windSpeed: 15, humidity: 0.65
           },
+          groundColor: "#d4d4d4",
           flora: [
             { type: "spruce", density: 0.4, color: "#2d5016" },
             { type: "pine", density: 0.3, color: "#3a6b35" },
@@ -274,6 +275,7 @@
             baseTemp: 26, tempRange: 8, seasonalVariation: 0.3,
             precipitationRate: 0.7, windSpeed: 8, humidity: 0.85
           },
+          groundColor: "#3d2817",
           flora: [
             { type: "canopy", density: 0.6, color: "#2d5a2d" },
             { type: "palm", density: 0.4, color: "#3d7a3d" },
@@ -296,6 +298,7 @@
             baseTemp: 24, tempRange: 15, seasonalVariation: 0.6,
             precipitationRate: 0.2, windSpeed: 12, humidity: 0.5
           },
+          groundColor: "#c19a6b",
           flora: [
             { type: "acacia", density: 0.2, color: "#8b7355" },
             { type: "grass", density: 0.9, color: "#9acd32" },
@@ -325,6 +328,7 @@
                 this.season = "winter";
                 this.weather = "clear";
                 this.animals = [];
+                this.extinctSpecies = new Set(); // Track extinct species
                 this.initializeAnimals();
             }
 
@@ -352,17 +356,19 @@
                 });
             }
 
-            getSeason(dayOfYear) {
-                if (dayOfYear < 90) return "winter";
-                if (dayOfYear < 180) return "spring";
-                if (dayOfYear < 270) return "summer";
-                if (dayOfYear < 360) return "autumn";
+            getSeason(totalDays) {
+                const dayInYear = totalDays % 365; // Calculate which day of the year cycle
+                if (dayInYear < 90) return "winter";
+                if (dayInYear < 180) return "spring";
+                if (dayInYear < 270) return "summer";
+                if (dayInYear < 360) return "autumn";
                 return "winter";
             }
 
-            calculateTemperature(dayOfYear) {
+            calculateTemperature(totalDays) {
                 const { baseTemp, tempRange, seasonalVariation } = this.config.climate;
-                const yearProgress = (dayOfYear / 365) * 2 * Math.PI;
+                const dayInYear = totalDays % 365; // Calculate position in yearly cycle
+                const yearProgress = (dayInYear / 365) * 2 * Math.PI;
                 const seasonalTemp = Math.sin(yearProgress - Math.PI / 2) * tempRange * seasonalVariation;
                 const dailyVariation = (Math.random() - 0.5) * 5;
                 return baseTemp + seasonalTemp + dailyVariation;
@@ -393,10 +399,23 @@
                     animal.x += animal.vx;
                     animal.y += animal.vy;
 
-                    if (animal.x < 0) animal.x = 800;
-                    if (animal.x > 800) animal.x = 0;
-                    if (animal.y < 0) animal.y = 450;
-                    if (animal.y > 450) animal.y = 0;
+                    // Bounce off edges instead of wrapping
+                    if (animal.x < 0) {
+                        animal.x = 0;
+                        animal.vx = -animal.vx;
+                    }
+                    if (animal.x > 800) {
+                        animal.x = 800;
+                        animal.vx = -animal.vx;
+                    }
+                    if (animal.y < 0) {
+                        animal.y = 0;
+                        animal.vy = -animal.vy;
+                    }
+                    if (animal.y > 450) {
+                        animal.y = 450;
+                        animal.vy = -animal.vy;
+                    }
                 });
 
                 // Predation
@@ -430,7 +449,14 @@
 
                 this.config.fauna.forEach(species => {
                     const currentPop = speciesCounts[species.species] || 0;
-                    if (currentPop < species.population && Math.random() < species.growthRate) {
+                    
+                    // Mark species as extinct if population reaches zero
+                    if (currentPop === 0) {
+                        this.extinctSpecies.add(species.species);
+                    }
+                    
+                    // Only allow reproduction if species is not extinct and below target population
+                    if (!this.extinctSpecies.has(species.species) && currentPop > 0 && currentPop < species.population && Math.random() < species.growthRate) {
                         this.animals.push({
                             id: `${species.species}_${Date.now()}_${Math.random()}`,
                             species: species.species,
@@ -453,9 +479,10 @@
 
             step(hoursPerStep = 1) {
                 this.time += hoursPerStep;
-                this.dayOfYear = Math.floor(this.time / 24) % 365;
-                this.season = this.getSeason(this.dayOfYear);
-                this.temperature = this.calculateTemperature(this.dayOfYear);
+                const totalDays = Math.floor(this.time / 24);
+                this.dayOfYear = totalDays; // No more modulo - days go on forever
+                this.season = this.getSeason(totalDays);
+                this.temperature = this.calculateTemperature(totalDays);
                 this.weather = this.calculateWeather(this.temperature);
                 this.wind = this.config.climate.windSpeed + (Math.random() - 0.5) * 10;
                 this.humidity = this.config.climate.humidity + (Math.random() - 0.5) * 0.2;
@@ -554,8 +581,8 @@
         }
 
         function drawTerrain(drawCtx, flora, season) {
-            // Draw ground layer first (changes with season)
-            const groundColor = getGroundColor(season);
+            // Draw ground layer first (uses biome base color + seasonal tint)
+            const groundColor = getGroundColor(season, simulation.config.groundColor || "#8fbc8f");
             drawCtx.fillStyle = groundColor;
             drawCtx.fillRect(0, 350, 800, 100); // Ground layer at bottom
             
@@ -595,14 +622,28 @@
             });
         }
 
-        function getGroundColor(season) {
+        function getGroundColor(season, baseColor) {
+            // Parse base color
+            const base = hexToRgb(baseColor);
+            
+            // Apply seasonal tint to base color
+            let tint = { r: 0, g: 0, b: 0 };
             switch(season) {
-                case "winter": return "#e8f4f8"; // Snowy white
-                case "spring": return "#90ee90"; // Light green
-                case "summer": return "#8fbc8f"; // Green
-                case "autumn": return "#daa520"; // Golden brown
-                default: return "#8fbc8f";
+                case "winter":
+                    tint = { r: 60, g: 60, b: 70 }; // Whiter/bluer
+                    break;
+                case "spring":
+                    tint = { r: 10, g: 40, b: 10 }; // Greener
+                    break;
+                case "summer":
+                    tint = { r: 0, g: 20, b: 0 }; // Slightly greener
+                    break;
+                case "autumn":
+                    tint = { r: 40, g: 20, b: -10 }; // More orange/brown
+                    break;
             }
+            
+            return `rgb(${Math.min(255, Math.max(0, base.r + tint.r))}, ${Math.min(255, Math.max(0, base.g + tint.g))}, ${Math.min(255, Math.max(0, base.b + tint.b))})`;
         }
 
         function render() {
@@ -630,10 +671,12 @@
 
             // Draw time/season overlay
             drawCtx.fillStyle = 'rgba(0,0,0,0.7)';
-            drawCtx.fillRect(10, 10, 220, 50);
+            drawCtx.fillRect(10, 10, 280, 50);
             drawCtx.fillStyle = '#ffffff';
             drawCtx.font = 'bold 16px "Courier New", monospace';
-            drawCtx.fillText(`Day ${Math.floor(simulation.dayOfYear)} - ${simulation.season.toUpperCase()}`, 20, 30);
+            const year = Math.floor(simulation.dayOfYear / 365) + 1;
+            const dayInYear = (simulation.dayOfYear % 365) + 1;
+            drawCtx.fillText(`Year ${year}, Day ${dayInYear} - ${simulation.season.toUpperCase()}`, 20, 30);
             drawCtx.font = '14px "Courier New", monospace';
             drawCtx.fillText(`Time: ${Math.floor(simulation.time % 24)}:00`, 20, 50);
             
